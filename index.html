@@ -4,146 +4,122 @@
   <meta charset="UTF-8">
   <title>派遣会社スタッフ対応Bot</title>
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: "Helvetica", sans-serif;
-    }
-
     body {
+      font-family: sans-serif;
+      background-color: #f5f5f5;
       margin: 0;
-      background: #f0f2f5;
+      padding: 0;
+      display: flex;
+      justify-content: center;
     }
 
     .chat-container {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 350px;
-      max-height: 500px;
-      background: #fff;
+      background-color: white;
+      border: 1px solid #ddd;
       border-radius: 10px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      z-index: 9999;
+      margin: 30px auto;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    .chat-header {
-      background: #2c3e50;
-      color: white;
-      padding: 10px;
-      text-align: center;
-      font-weight: bold;
+    h1 {
+      font-size: 20px;
+      margin-bottom: 10px;
     }
 
     #chat {
-      flex: 1;
-      padding: 10px;
+      height: 300px;
       overflow-y: auto;
-    }
-
-    .message {
-      margin: 8px 0;
-      padding: 8px 12px;
-      border-radius: 16px;
-      max-width: 80%;
-      clear: both;
-    }
-
-    .user {
-      background-color: #d6eaff;
-      align-self: flex-end;
-      float: right;
-    }
-
-    .bot {
-      background-color: #f1f1f1;
-      align-self: flex-start;
-      float: left;
-    }
-
-    .input-area {
-      display: flex;
-      border-top: 1px solid #ccc;
       padding: 10px;
-      background: #fafafa;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      background-color: #fafafa;
+    }
+
+    p {
+      margin: 5px 0;
     }
 
     #input {
-      flex: 1;
-      padding: 8px;
-      border-radius: 8px;
+      width: 70%;
+      padding: 10px;
+      font-size: 16px;
       border: 1px solid #ccc;
-      outline: none;
+      border-radius: 5px;
     }
 
-    button {
-      margin-left: 10px;
-      padding: 8px 12px;
-      border: none;
-      background: #3498db;
+    #send-button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #1976d2;
       color: white;
-      border-radius: 8px;
+      border: none;
+      border-radius: 5px;
       cursor: pointer;
+      margin-left: 10px;
     }
 
-    button:hover {
-      background: #2980b9;
+    #send-button:hover {
+      background-color: #0d47a1;
+    }
+
+    /* スマホ表示 */
+    @media screen and (max-width: 767px) {
+      .chat-container {
+        width: 95%;
+        padding: 10px;
+      }
+
+      #input {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+
+      #send-button {
+        width: 100%;
+        margin-left: 0;
+      }
+    }
+
+    /* PC表示 */
+    @media screen and (min-width: 768px) {
+      .chat-container {
+        width: 600px;
+      }
     }
   </style>
 </head>
 <body>
-
-<div class="chat-container">
-  <div class="chat-header">派遣会社スタッフ対応Bot</div>
-  <div id="chat"></div>
-  <div class="input-area">
-    <input type="text" id="input" placeholder="質問を入力..." />
-    <button onclick="sendMessage()">送信</button>
+  <div class="chat-container">
+    <h1>派遣会社スタッフ対応Bot</h1>
+    <div id="chat"></div>
+    <input type="text" id="input" placeholder="質問を入力...">
+    <button id="send-button" onclick="sendMessage()">送信</button>
   </div>
-</div>
 
-<script>
-  async function sendMessage() {
-    const input = document.getElementById('input');
-    const chat = document.getElementById('chat');
-    const message = input.value.trim();
-    if (!message) return;
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById('input').value;
+      const chat = document.getElementById('chat');
 
-    // ユーザーの吹き出しを表示
-    const userBubble = document.createElement('div');
-    userBubble.className = 'message user';
-    userBubble.textContent = message;
-    chat.appendChild(userBubble);
-    chat.scrollTop = chat.scrollHeight;
+      chat.innerHTML += `<p><strong>あなた:</strong> ${input}</p>`;
+      document.getElementById('input').value = '';
 
-    input.value = "";
+      try {
+        const res = await fetch('/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: input })
+        });
 
-    try {
-      const res = await fetch('/chat', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ message })
-      });
-
-      const data = await res.json();
-
-      // Botの吹き出しを表示
-      const botBubble = document.createElement('div');
-      botBubble.className = 'message bot';
-      botBubble.textContent = data.reply;
-      chat.appendChild(botBubble);
-      chat.scrollTop = chat.scrollHeight;
-    } catch (error) {
-      const errorBubble = document.createElement('div');
-      errorBubble.className = 'message bot';
-      errorBubble.textContent = "エラーが発生しました。";
-      chat.appendChild(errorBubble);
-      chat.scrollTop = chat.scrollHeight;
+        const data = await res.json();
+        chat.innerHTML += `<p><strong>Bot:</strong> ${data.reply}</p>`;
+        chat.scrollTop = chat.scrollHeight;
+      } catch (error) {
+        chat.innerHTML += `<p><strong>エラー:</strong> サーバーから返事がありません。</p>`;
+      }
     }
-  }
-</script>
-
+  </script>
 </body>
 </html>
