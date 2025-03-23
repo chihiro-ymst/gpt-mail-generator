@@ -1,125 +1,150 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>派遣会社スタッフ対応Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: sans-serif;
-      background-color: #f5f5f5;
       margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
+      font-family: sans-serif;
     }
 
-    .chat-container {
-      background-color: white;
-      border: 1px solid #ddd;
+    /* === PC & 全体共通チャットウィンドウ === */
+    .chatbot {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 350px;
+      max-height: 500px;
       border-radius: 10px;
-      margin: 30px auto;
-      padding: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      background: #fff;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      z-index: 9999;
     }
 
-    h1 {
-      font-size: 20px;
-      margin-bottom: 10px;
+    .chat-header {
+      background-color: #1976d2;
+      color: #fff;
+      padding: 10px;
+      font-weight: bold;
+      text-align: center;
     }
 
-    #chat {
-      height: 300px;
+    .chat-body {
+      flex: 1;
+      padding: 10px;
       overflow-y: auto;
+      background: #f9f9f9;
+    }
+
+    .chat-footer {
+      display: flex;
+      border-top: 1px solid #ccc;
       padding: 10px;
+    }
+
+    .chat-footer input {
+      flex: 1;
+      padding: 8px;
+      font-size: 14px;
+      border-radius: 4px;
       border: 1px solid #ccc;
-      border-radius: 6px;
-      margin-bottom: 15px;
-      background-color: #fafafa;
     }
 
-    p {
-      margin: 5px 0;
-    }
-
-    #input {
-      width: 70%;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    #send-button {
-      padding: 10px 20px;
-      font-size: 16px;
+    .chat-footer button {
+      margin-left: 8px;
+      padding: 8px 12px;
       background-color: #1976d2;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 4px;
       cursor: pointer;
-      margin-left: 10px;
     }
 
-    #send-button:hover {
+    .chat-footer button:hover {
       background-color: #0d47a1;
     }
 
-    /* スマホ表示 */
+    /* === モバイル用：画面下からスライド表示 === */
     @media screen and (max-width: 767px) {
-      .chat-container {
-        width: 95%;
-        padding: 10px;
-      }
-
-      #input {
+      .chatbot {
         width: 100%;
-        margin-bottom: 10px;
+        bottom: -100%;
+        left: 0;
+        right: 0;
+        border-radius: 10px 10px 0 0;
+        transition: bottom 0.3s ease;
       }
 
-      #send-button {
-        width: 100%;
-        margin-left: 0;
+      .chatbot.active {
+        bottom: 0;
       }
-    }
 
-    /* PC表示 */
-    @media screen and (min-width: 768px) {
-      .chat-container {
-        width: 600px;
+      #open-chat-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 10px 15px;
+        background-color: #1976d2;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-size: 14px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        z-index: 9999;
       }
     }
   </style>
 </head>
 <body>
-  <div class="chat-container">
-    <h1>派遣会社スタッフ対応Bot</h1>
-    <div id="chat"></div>
+
+<!-- モバイル用開閉ボタン -->
+<button id="open-chat-btn" onclick="toggleChat()">チャット</button>
+
+<!-- チャット本体 -->
+<div class="chatbot" id="chatbot">
+  <div class="chat-header">派遣会社スタッフ対応Bot</div>
+  <div class="chat-body" id="chat"></div>
+  <div class="chat-footer">
     <input type="text" id="input" placeholder="質問を入力...">
-    <button id="send-button" onclick="sendMessage()">送信</button>
+    <button onclick="sendMessage()">送信</button>
   </div>
+</div>
 
-  <script>
-    async function sendMessage() {
-      const input = document.getElementById('input').value;
-      const chat = document.getElementById('chat');
+<script>
+  function toggleChat() {
+    const bot = document.getElementById('chatbot');
+    bot.classList.toggle('active');
+  }
 
-      chat.innerHTML += `<p><strong>あなた:</strong> ${input}</p>`;
-      document.getElementById('input').value = '';
+  async function sendMessage() {
+    const input = document.getElementById('input');
+    const chat = document.getElementById('chat');
+    const text = input.value.trim();
 
-      try {
-        const res = await fetch('/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: input })
-        });
+    if (!text) return;
 
-        const data = await res.json();
-        chat.innerHTML += `<p><strong>Bot:</strong> ${data.reply}</p>`;
-        chat.scrollTop = chat.scrollHeight;
-      } catch (error) {
-        chat.innerHTML += `<p><strong>エラー:</strong> サーバーから返事がありません。</p>`;
-      }
+    chat.innerHTML += `<p><strong>あなた:</strong> ${text}</p>`;
+    input.value = '';
+
+    try {
+      const res = await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text })
+      });
+      const data = await res.json();
+      chat.innerHTML += `<p><strong>Bot:</strong> ${data.reply}</p>`;
+      chat.scrollTop = chat.scrollHeight;
+    } catch {
+      chat.innerHTML += `<p><strong>エラー:</strong> サーバーに接続できません。</p>`;
     }
-  </script>
+  }
+</script>
+
 </body>
 </html>
