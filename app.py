@@ -67,7 +67,7 @@ def contact():
 
     except Exception as e:
         print(f"❌ メール送信エラー: {e}")
-        return "送信に失敗しました。時間をおいて再度お試しください。", 500
+        return f"送信に失敗しました。時間をおいて再度お試しください。<br>エラー内容: {e}", 500  # エラー内容をユーザーに返す
 
 
 @app.route('/complaint')
