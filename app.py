@@ -25,15 +25,11 @@ mail = Mail(app)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
-
-@app.route('/top')
-def top():
     return render_template('top.html')
 
 @app.route('/index')
 def index_redirect():
-    return render_template('top.html')
+    return render_template('index.html')
 
 @app.route('/terms')
 def terms():
