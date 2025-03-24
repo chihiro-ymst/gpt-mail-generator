@@ -4,7 +4,9 @@ services:
     env: python
     buildCommand: "pip install -r requirements.txt"
     startCommand: "gunicorn app:app"
-
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9 # 例: Python 3.9 を指定
 
 
 
