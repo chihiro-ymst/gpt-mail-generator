@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>面談日程メールジェネレーター</title>
+  <style>
+    body {
+      font-family: "Hiragino Kaku Gothic ProN", sans-serif;
+      background: linear-gradient(to right, #b2fefa, #0ed2f7);
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 50px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1em;
+    }
+
+    button {
+      margin-top: 25px;
+      padding: 12px 20px;
+      background-color: #0288d1;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1em;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    #result {
+      margin-top: 30px;
+      padding: 15px;
+      background: #f5f5f5;
+      border-radius: 6px;
+      white-space: pre-wrap;
+    }
+
+    /* 🔵 バナー風注釈 */
+    .gpt-banner {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 999;
+  background: #fff8e1; /* ← 明るい黄色ベース */
+  border-left: 6px solid #ff9800; /* ← 濃いオレンジで目立たせる */
+  padding: 12px 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  max-width: 300px;
+  font-size: 0.9em;
+  color: #444;
+}
+
+.gpt-banner a {
+  color: #e65100; /* 目立つリンクカラー */
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+  </style>
+</head>
+<body>
+<!-- 🔵 GPT注意バナー -->
+<div class="gpt-banner" id="notice-banner">
+  <strong>💡 AI生成に関するご注意</strong><br>
+  このメール文は <strong>GPT</strong> により生成されています。<br>
+  生成するたびに内容が変わる可能性があります。<br><br>
+  📌 テンプレ保存機能は  
+  <a href="/pro">プロ版でご利用可能です</a>
+</div>
+
+
+  <div class="container">
+    <h1>面談日程メールジェネレーター</h1>
+
+    <label>相手の名前（敬称付き）</label>
+    <input type="text" id="recipient" placeholder="例: 山田様" />
+
+    <label>自分の名前（署名）</label>
+    <input type="text" id="sender" placeholder="例: 株式会社ABC 田中" />
+
+    <label>面談候補日</label>
+    <input type="text" id="dates" placeholder="例: 3/25（月） 15:00〜16:00" />
+
+    <label>場所（任意）</label>
+    <input type="text" id="place" placeholder="例: Zoom または オフィス" />
+
+    <label>補足メッセージ（任意）</label>
+    <textarea id="memo" placeholder="例: オンライン希望です など"></textarea>
+
+    <button onclick="generate()">メール文を生成する</button>
+
+    <div id="result">作成したメール本文がここに表示されます</div>
+  </div>
+
+  <script>
+    async function generate() {
+      const data = {
+        recipient: document.getElementById("recipient").value,
+        sender: document.getElementById("sender").value,
+        dates: document.getElementById("dates").value,
+        place: document.getElementById("place").value,
+        memo: document.getElementById("memo").value
+      };
+
+      const res = await fetch("/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+      document.getElementById("result").textContent = result.email;
+    }
+  </script>
+</body>
+</html>

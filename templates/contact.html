@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>お問い合わせ | ビジネスメールジェネレーター</title>
+  <style>
+    body {
+      font-family: "Hiragino Kaku Gothic ProN", sans-serif;
+      background: linear-gradient(to right, #ece9e6, #ffffff);
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 50px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    form label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1em;
+    }
+
+    button {
+      margin-top: 25px;
+      padding: 12px 20px;
+      background-color: #0288d1;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    #resultMessage {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #2e7d32;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>お問い合わせ</h1>
+    <form id="contactForm">
+      <label for="email">メールアドレス</label>
+      <input type="email" id="email" name="email" placeholder="your@example.com" required />
+    
+      <label for="message">お問い合わせ内容</label>
+      <textarea id="message" name="message" rows="6" placeholder="ご質問やご要望などをご記入ください。" required></textarea>
+    
+      <button type="submit">送信する</button>
+    </form>
+
+    <!-- 🔽 ここに送信完了メッセージを表示 -->
+    <p id="resultMessage"></p>
+  </div>
+
+  <script>
+    document.getElementById("contactForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const form = e.target;
+      const formData = new FormData(form);
+      const params = new URLSearchParams(formData);
+
+      try {
+        const res = await fetch("/contact", {
+          method: "POST",
+          body: params
+        });
+
+        const result = await res.text();
+        document.getElementById("resultMessage").textContent = result;
+        form.reset();
+      } catch (error) {
+        document.getElementById("resultMessage").textContent = "送信に失敗しました。時間をおいて再度お試しください。";
+        document.getElementById("resultMessage").style.color = "red";
+      }
+    });
+  </script>
+</body>
+</html>

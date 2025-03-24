@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>ビジネスメールジェネレーター | トップページ</title>
+  <style>
+    body {
+      font-family: "Hiragino Kaku Gothic ProN", sans-serif;
+      background: linear-gradient(to right, #b2fefa, #0ed2f7);
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 80px auto;
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.2em;
+      margin-bottom: 10px;
+    }
+
+    p.description {
+      font-size: 0.95em;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    .link-btn {
+      display: block;
+      background: white;
+      border: 2px solid #00bcd4;
+      color: #00bcd4;
+      text-decoration: none;
+      padding: 14px;
+      margin: 10px auto;
+      width: 60%;
+      border-radius: 8px;
+      font-size: 1em;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+
+    .link-btn:hover {
+      background-color: #00bcd4;
+      color: white;
+    }
+
+    .footer-links {
+      text-align: center;
+      margin: 40px 0;
+      font-size: 0.85em;
+    }
+
+    .footer-links a {
+      color: #0288d1;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    /* バナー */
+    .gpt-banner {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 999;
+      background: #e3f2fd;
+      border-left: 6px solid #2196f3;
+      padding: 12px 16px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      max-width: 280px;
+      font-size: 0.9em;
+      color: #333;
+    }
+
+    .gpt-banner a {
+      color: #1976d2;
+      font-weight: bold;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- バナー -->
+  <div class="gpt-banner">
+    <strong>💡 AI生成に関するご注意</strong><br>
+    このメール文は <strong>GPT</strong> により生成されています。<br>
+    生成するたびに内容が変わる可能性があります。<br><br>
+    📌 テンプレ保存機能は  
+    <a href="/pro">プロ版でご利用可能です</a>
+  </div>
+
+  <div class="container">
+    <h1>ビジネスメールジェネレーター</h1>
+    <p class="description">
+      面談日程・クレーム対応・通常ビジネスメールをGPTで即作成。<br>
+      入力フォームに情報を入れるだけで、正しい敬語と構成のビジネスメールが完成します。
+    </p>
+
+    <a href="/business" class="link-btn">📨 ビジネスメール生成</a>
+    <a href="/complaint" class="link-btn">⚠️ クレーム対応メール生成</a>
+    <a href="/index" class="link-btn">📅 面談日程メール生成</a> <!-- 必要ならパス調整してね -->
+
+    <div class="footer-links">
+      <a href="/terms">利用規約</a>
+      |
+      <a href="/contact">お問い合わせ</a>
+    </div>
+  </div>
+
+</body>
+</html>

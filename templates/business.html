@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>ビジネスメールジェネレーター</title>
+  <style>
+    body {
+      font-family: "Hiragino Kaku Gothic ProN", sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #b2ebf2);
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1em;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(to right, #4dd0e1, #00acc1);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f4f4f4;
+      border-radius: 6px;
+      white-space: pre-wrap; /* 改行保持 */
+      font-size: 1em;
+      line-height: 1.6;
+    }
+     /* 🔵 バナー風注釈 */
+     .gpt-banner {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 999;
+  background: #fff8e1; /* ← 明るい黄色ベース */
+  border-left: 6px solid #ff9800; /* ← 濃いオレンジで目立たせる */
+  padding: 12px 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  max-width: 300px;
+  font-size: 0.9em;
+  color: #444;
+}
+
+.gpt-banner a {
+  color: #e65100; /* 目立つリンクカラー */
+  font-weight: bold;
+  text-decoration: underline;
+}
+  </style>
+</head>
+<body>
+  <!-- 🔵 GPT注意バナー -->
+<div class="gpt-banner" id="notice-banner">
+  <strong>💡 AI生成に関するご注意</strong><br>
+  このメール文は <strong>GPT</strong> により生成されています。<br>
+  生成するたびに内容が変わる可能性があります。<br><br>
+  📌 テンプレ保存機能は  
+  <a href="/pro">プロ版でご利用可能です</a>
+</div>
+  <div class="container">
+    <h1>ビジネスメールジェネレーター</h1>
+
+    <label>宛先（敬称付き）</label>
+    <input type="text" id="recipient" placeholder="例: 山田様" />
+
+    <label>差出人名（署名）</label>
+    <input type="text" id="sender" placeholder="例: 株式会社ABC 田中" />
+
+    <label>件名</label>
+    <input type="text" id="subject" placeholder="例: お打ち合わせの件" />
+
+    <label>挨拶文</label>
+    <textarea id="greeting" placeholder="例: お世話になっております。株式会社ABCの田中です。"></textarea>
+
+    <label>本文</label>
+    <textarea id="body" placeholder="例: 下記日程でお打ち合わせをお願いできますでしょうか。3/25 13:00〜を予定しております。"></textarea>
+
+    <label>結びの言葉</label>
+    <textarea id="closing" placeholder="例: 何卒よろしくお願い申し上げます。"></textarea>
+
+    <button onclick="generate()">メール文を生成する</button>
+
+    <div id="result">作成したメール本文</div>
+  </div>
+
+  <script>
+    async function generate() {
+      const data = {
+        recipient: document.getElementById("recipient").value,
+        sender: document.getElementById("sender").value,
+        subject: document.getElementById("subject").value,
+        greeting: document.getElementById("greeting").value,
+        body: document.getElementById("body").value,
+        closing: document.getElementById("closing").value
+      };
+
+      const res = await fetch("/generate_business", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+      document.getElementById("result").textContent = result.email;
+    }
+  </script>
+</body>
+</html>
