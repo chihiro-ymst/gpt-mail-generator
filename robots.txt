@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://gpt-mail-generator.onrender.com/static/sitemap.xml
