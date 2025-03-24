@@ -4,3 +4,4 @@ flask-mail
 openai
 python-dotenv
 gunicorn
+flask==2.3.2
