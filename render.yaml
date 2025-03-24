@@ -3,7 +3,7 @@ services:
     name: gpt-mail-generator
     env: python
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn app:app --chdir=/opt/render/project/src"
+    startCommand: gunicorn app:app
     flask==2.3.2
 
 
