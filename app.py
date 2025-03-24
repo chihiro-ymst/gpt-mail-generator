@@ -41,6 +41,10 @@ def coming_soon():
 
 from email.header import Header
 
+@app.route('/how-to')
+def how_to():
+    return render_template('how_to.html')
+
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "GET":

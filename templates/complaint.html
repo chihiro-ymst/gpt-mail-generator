@@ -81,6 +81,17 @@
   </style>
 </head>
 <body>
+<!-- 🔵 ナビバー（ヘッダー） -->
+<header style="background: #1976d2; padding: 15px 30px;">
+  <nav style="max-width: 1000px; margin: 0 auto; display: flex; gap: 20px;">
+    <a href="/" style="color: white; font-weight: bold; text-decoration: none;">トップ</a>
+    <a href="/business" style="color: white; text-decoration: none;">ビジネスメール</a>
+    <a href="/complaint" style="color: white; text-decoration: none;">クレーム対応</a>
+    <a href="/how-to" style="color: white; text-decoration: none;">使い方ガイド</a>
+    <a href="/terms" style="color: white; text-decoration: none;">利用規約</a>
+    <a href="/contact" style="color: white; text-decoration: none;">お問い合わせ</a>
+  </nav>
+</header>
   <!-- 🔵 GPT注意バナー -->
 <div class="gpt-banner" id="notice-banner">
   <strong>💡 AI生成に関するご注意</strong><br>
@@ -115,6 +126,7 @@
     <button onclick="generate()">メール文を生成する</button>
 
     <div id="result">作成したメール本文</div>
+    <div class="container"></div>
   </div>
 
   <script>
