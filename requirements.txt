@@ -1,2 +1,6 @@
-gunicorn==23.0.0
-packaging==24.2
+flask
+flask-cors
+flask-mail
+openai
+python-dotenv
+gunicorn
