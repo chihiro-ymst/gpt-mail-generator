@@ -45,6 +45,10 @@ from email.header import Header
 def how_to():
     return render_template('how_to.html')
 
+@app.route('/quick-reply')
+def quick_reply():
+    return render_template('quick-reply.html')
+
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "GET":
@@ -200,6 +204,42 @@ def generate():
     except Exception as e:
         print("❌ エラー:", e)
         return jsonify({"error": "生成中にエラーが発生しました"}), 500
+    
+@app.route('/generate_reply', methods=['POST'])
+def generate_reply():
+    try:
+        data = request.json
+        recipient = data.get("recipient", "").strip()
+        reply_type = data.get("reply_type", "").strip()
+        topic = data.get("topic", "").strip()
+        memo = data.get("memo", "").strip()
+
+        # 返信テンプレート分岐
+        if reply_type == "承知":
+            user_message = f"{recipient}、ご依頼の「{topic}」承りました。{memo or '期日までに対応いたします。'}"
+        elif reply_type == "待って":
+            user_message = f"{recipient}、{topic}の件、準備いたしますので{memo or '少々お待ちください。'}"
+        elif reply_type == "回答":
+            user_message = f"{recipient}、ご依頼いただいた「{topic}」について、{memo or '以下の通りご回答申し上げます。'}"
+        else:
+            user_message = f"{recipient}、{topic}についてのご連絡です。{memo}"
+
+        # OpenAIで文章を丁寧に整形
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "あなたは日本語ビジネスメールを丁寧に整えるアシスタントです。"},
+                {"role": "user", "content": user_message}
+            ]
+        )
+
+        reply = response.choices[0].message.content.strip()
+        return jsonify({"email": reply})
+
+    except Exception as e:
+        print(f"❌ エラー: {e}")
+        return jsonify({"error": "生成中にエラーが発生しました"}), 500
+
 
 # === アプリ起動 ===
 if __name__ == '__main__':

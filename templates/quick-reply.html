@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>クイック返信ジェネレーター</title>
+  <style>
+    body {
+      font-family: "Hiragino Kaku Gothic ProN", sans-serif;
+      background: linear-gradient(to right, #f0f2f5, #dbefff);
+      padding: 40px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+
+    h1 {
+      color: #1976d2;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 15px;
+      display: block;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-top: 5px;
+    }
+
+    button {
+      background-color: #1976d2;
+      color: white;
+      padding: 12px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 6px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 30px;
+      white-space: pre-wrap;
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+    /* バナー */
+    .gpt-banner {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 999;
+      background: #e3f2fd;
+      border-left: 6px solid #2196f3;
+      padding: 12px 16px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      max-width: 280px;
+      font-size: 0.9em;
+      color: #333;
+    }
+
+    .gpt-banner a {
+      color: #1976d2;
+      font-weight: bold;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+   <!-- 🔵 ナビバー（ヘッダー） -->
+<header style="background: #1976d2; padding: 15px 30px;">
+  <nav style="max-width: 1000px; margin: 0 auto; display: flex; gap: 20px;">
+    <a href="/" style="color: white; font-weight: bold; text-decoration: none;">トップ</a>
+    <a href="/business" style="color: white; text-decoration: none;">ビジネスメール</a>
+    <a href="/complaint" style="color: white; text-decoration: none;">クレーム対応</a>
+    <a href="/quick-reply" style="color: white; text-decoration: none;">クイック返信</a>
+    <a href="/how-to" style="color: white; text-decoration: none;">使い方ガイド</a>
+    <a href="/terms" style="color: white; text-decoration: none;">利用規約</a>
+    <a href="/contact" style="color: white; text-decoration: none;">お問い合わせ</a>
+  </nav>
+</header>
+<!-- 🔵 GPT注意バナー -->
+<div class="gpt-banner" id="notice-banner">
+  <strong>💡 AI生成に関するご注意</strong><br>
+  このメール文は <strong>GPT</strong> により生成されています。<br>
+  生成するたびに内容が変わる可能性があります。<br><br>
+  📌 テンプレ保存機能は  
+  <a href="/coming-soon">プロ版は現在準備中です</a>
+</div>
+
+</div>
+  <div class="container">
+    <h1>クイック返信ジェネレーター</h1>
+
+    <form id="quickReplyForm">
+      <label for="recipient">宛先</label>
+      <input type="text" id="recipient" name="recipient" placeholder="田中様" required>
+
+      <label for="reply_type">返信タイプ</label>
+      <select id="reply_type" name="reply_type">
+        <option value="承知">承知</option>
+        <option value="待って">準備中（待って）</option>
+        <option value="回答">回答</option>
+        <option value="その他">その他</option>
+      </select>
+
+      <label for="topic">用件</label>
+      <input type="text" id="topic" name="topic" placeholder="見積もりのご依頼について" required>
+
+      <label for="memo">備考（任意）</label>
+      <textarea id="memo" name="memo" rows="3" placeholder="期日は3月末まで など"></textarea>
+
+      <button type="submit">メール文を生成</button>
+    </form>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    document.getElementById("quickReplyForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const data = {
+        recipient: document.getElementById("recipient").value,
+        reply_type: document.getElementById("reply_type").value,
+        topic: document.getElementById("topic").value,
+        memo: document.getElementById("memo").value
+      };
+
+      const res = await fetch("/generate_reply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+      document.getElementById("result").textContent = result.email || "エラーが発生しました。";
+    });
+  </script>
+</body>
+</html>
