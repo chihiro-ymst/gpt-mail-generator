@@ -156,7 +156,7 @@ def generate_business():
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "あなたは日本語ビジネスメールを丁寧に書くアシスタントです。"},
+                {"role": "system", "content": "あなたは丁寧なビジネスメールを生成するアシスタントです。常に、宛名には相手の名前を拝啓　（recipient）を使い、、文末の署名には自分の名前（sender）を入れて敬具をつけてください。です。"},
                 {"role": "user", "content": user_message}
             ]
         )
@@ -193,7 +193,7 @@ def generate():
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "あなたはビジネスメールの作成を手伝うアシスタントです。"},
+                {"role": "system", "content": "あなたは丁寧なビジネスメールを生成するアシスタントです。常に、宛名には相手の名前を拝啓　（recipient）を使い、、文末の署名には自分の名前（sender）を入れて敬具をつけてください。"},
                 {"role": "user", "content": user_message}
             ]
         )
@@ -228,7 +228,7 @@ def generate_reply():
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "あなたは日本語ビジネスメールを丁寧に整えるアシスタントです。"},
+                {"role": "system", "content": "あなたは丁寧なビジネスメールを生成するアシスタントです。常に、宛名には相手の名前を拝啓　（recipient）を使い、、文末の署名には自分の名前（sender）を入れて敬具をつけてください。"},
                 {"role": "user", "content": user_message}
             ]
         )
